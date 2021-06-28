@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="Maven__org_eclipse_paho_org_eclipse_paho_client_mqttv3_1_2_5">
+    <output-path>$PROJECT_DIR$/out/artifacts/Maven__org_eclipse_paho_org_eclipse_paho_client_mqttv3_1_2_5</output-path>
+    <root id="root">
+      <element id="library" level="project" name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5" />
+    </root>
+  </artifact>
+</component>
