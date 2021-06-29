@@ -38,9 +38,11 @@ public class MqttReceriveCallback implements MqttCallback {
         System.out.println("接收消息主题 : " + topic);
         System.out.println("接收消息Qos : " + message.getQos());
         //获取负载，再转为字符串
-        System.out.println("接收消息内容 : " + new String(message.getPayload()));
+        String str = new String(message.getPayload());
+//        System.out.println("接收消息内容 : " + new String(message.getPayload()));
+        System.out.println("接收消息内容 : " + str);
 
-        if (!"close".equals(new String(message.getPayload()))) {
+        if (str.startsWith("{") && str.endsWith("}")) {
             //json字符串返回值反序列化为实体类
             Sensor sensor = JSONObject.parseObject(new String(message.getPayload()), Sensor.class);
 

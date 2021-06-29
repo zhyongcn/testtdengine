@@ -7,9 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author zz
- */
+
 public class MyMqttClient {
     public static final String HOST = "tcp://175.24.33.56:1883";
     public static final String TOPIC = "86518/YXHY/12-1-101/phone";
@@ -58,14 +56,14 @@ public class MyMqttClient {
             options.setConnectionTimeout(60);
             // 设置会话心跳时间 单位为秒 服务器会每隔1.5*20秒的时间向客户端发送个消息判断客户端是否在线，
             // 但这个方法并没有重连的机制
-            options.setKeepAliveInterval(60);
+            options.setKeepAliveInterval(300);
             // 设置回调
             client.setCallback(new MqttReceriveCallback());
             MqttTopic topic = client.getTopic(TOPIC);//回调的时候从客户端获取topic，可以避免错误？？
 
             //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
             //消息或者负载的字符串需要转换为bytes
-            options.setWill(topic, "close".getBytes(), 0, true);
+            options.setWill(topic, "close".getBytes(), 0, false);
 
             client.connect(options);
             //订阅消息

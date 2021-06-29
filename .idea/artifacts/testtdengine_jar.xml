@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="testtdengine:jar">
+  <artifact type="jar" name="testtdengine:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/testtdengine_jar</output-path>
     <root id="archive" name="testtdengine.jar">
       <element id="module-output" name="testtdengine" />
@@ -17,7 +17,7 @@
       <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.11" />
       <element id="library" level="project" name="Maven: com.taosdata.jdbc:taos-jdbcdriver:2.0.19" />
       <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.58" />
-      <element id="artifact" artifact-name="Maven__org_eclipse_paho_org_eclipse_paho_client_mqttv3_1_2_5" />
+      <element id="library" level="project" name="Maven: org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5" />
     </root>
   </artifact>
 </component>
