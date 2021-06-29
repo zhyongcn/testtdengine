@@ -12,8 +12,6 @@ import java.sql.Statement;
 
 /**
  * TODO: Restful 方式成功了，先跑通，要效率使用 C 连接器？ 线程池等技术更好？？
- *
- * @author zz
  */
 public class MqttReceriveCallback implements MqttCallback {
 
@@ -54,7 +52,6 @@ public class MqttReceriveCallback implements MqttCallback {
             Statement stmt = conn.createStatement();
 
             //插入一行数据
-            //int affectedRows = stmt.executeUpdate("insert into sensor0001 values(now, 500,800,0,0)");
             String sql = "insert into sensor0001 (ts, currenttemperature, currenthumidity, adjustingtemperature," +
                     "adjustinghumidity) values(now, " + sensor.getCurrentlyTemperature()
                     + "," + sensor.getCurrentlyHumidity()
