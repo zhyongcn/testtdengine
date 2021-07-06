@@ -17,9 +17,9 @@ public class MqttReceriveCallback implements MqttCallback {
     private final HashSet<String> fancoilsSet;
 
     public MqttReceriveCallback() {
-        sensorsSet = new HashSet<String>();
-        boilersSet = new HashSet<String>();
-        fancoilsSet = new HashSet<String>();
+        sensorsSet = new HashSet<>();
+        boilersSet = new HashSet<>();
+        fancoilsSet = new HashSet<>();
 
         try {
             Class.forName("com.taosdata.jdbc.rs.RestfulDriver");
@@ -37,6 +37,7 @@ public class MqttReceriveCallback implements MqttCallback {
                 System.out.println("表名是： " + tablename + "");
                 sensorsSet.add(tablename);
             }
+
             sql = "select tbname from homedevice.boilers";
             resultSet = stmt.executeQuery(sql);
             while (resultSet.next()) {
@@ -44,6 +45,7 @@ public class MqttReceriveCallback implements MqttCallback {
                 System.out.println("表名是： " + tablename + "");
                 boilersSet.add(tablename);
             }
+
             sql = "select tbname from homedevice.fancoils";
             resultSet = stmt.executeQuery(sql);
             while (resultSet.next()) {
@@ -59,7 +61,6 @@ public class MqttReceriveCallback implements MqttCallback {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
 
     }
 
@@ -89,22 +90,22 @@ public class MqttReceriveCallback implements MqttCallback {
         String sql = null;
 
         if (str.startsWith("{") && str.endsWith("}")) {
-            //json字符串返回值反序列化为实体类
-            //TODO： 依据 deviceType 分拣一下
+            //deviceType 5 || 6 传感器的消息
             if (str.contains("deviceType\":5,") || str.contains("deviceType\":6,")) {
+                //json字符串返回值反序列化为实体类
                 Sensor sensor = JSONObject.parseObject(str, Sensor.class);
                 String tablename = "sensor" + sensor.getDeviceId();
                 if (sensorsSet.contains(tablename)) {
                     if (sensor.getTimestamp() < 1600000000) {
                         sql = "insert into " + tablename + " (ts, currenttemperature, currenthumidity, adjustingtemperature,"
-                                +"adjustinghumidity) values(now, " + sensor.getCurrentlyTemperature()
+                                + "adjustinghumidity) values(now, " + sensor.getCurrentlyTemperature()
                                 + "," + sensor.getCurrentlyHumidity()
                                 + "," + sensor.getAdjustingTemperature()
                                 + "," + sensor.getAdjustingHumidity()
                                 + ");";
                     } else {
                         sql = "insert into " + tablename + " (ts, currenttemperature, currenthumidity, adjustingtemperature,"
-                                +"adjustinghumidity) values(" + sensor.getTimestamp()
+                                + "adjustinghumidity) values(" + sensor.getTimestamp()
                                 //这里要加 000 TDengine的时间戳毫秒级的。
                                 + "000," + sensor.getCurrentlyTemperature()
                                 + "," + sensor.getCurrentlyHumidity()
@@ -113,6 +114,7 @@ public class MqttReceriveCallback implements MqttCallback {
                                 + ");";
                     }
                 } else {
+                    sensor.setLocation(topic);
                     sql = "create table " + tablename + " using homedevice.sensors tags(\""
                             + sensor.getLocation() + "\", "
                             + sensor.getRoomId() + ","
@@ -121,6 +123,85 @@ public class MqttReceriveCallback implements MqttCallback {
                     sensorsSet.add(tablename);
                 }
             }
+
+            //deviceType 3  锅炉的消息
+            if (str.contains("deviceType\":3,")) {
+                //json字符串返回值反序列化为实体类
+                Boiler boiler = JSONObject.parseObject(str, Boiler.class);
+                String tablename = "boiler" + boiler.getDeviceId();
+                if (boilersSet.contains(tablename)) {
+                    if (boiler.getTimestamp() < 1600000000) {
+                        sql = "insert into " + tablename + " (ts, currenttemperature, settingtemperature, boilerstate,"
+                                + "roomstate) values(now, " + boiler.getCurrentlyTemperature()
+                                + "," + boiler.getSettingTemperature()
+                                + "," + boiler.isBoilerstate()
+                                + "," + boiler.getRoomState()
+                                + ");";
+                    } else {
+                        sql = "insert into " + tablename + " (ts, currenttemperature, settingtemperature, boilerstate,"
+                                + "roomstate) values(" + boiler.getTimestamp()
+                                //这里要加 000 TDengine的时间戳毫秒级的。
+                                + "000," + boiler.getCurrentlyTemperature()
+                                + "," + boiler.getSettingTemperature()
+                                + "," + boiler.isBoilerstate()
+                                + "," + boiler.getRoomState()
+                                + ");";
+                    }
+                } else {
+                    boiler.setLocation(topic);
+                    sql = "create table " + tablename + " using homedevice.boilers tags(\""
+                            + boiler.getLocation() + "\", "
+                            + boiler.getRoomId() + ","
+                            + boiler.getDeviceType() + ","
+                            + boiler.getDeviceId() + ")";
+                    boilersSet.add(tablename);
+                }
+            }
+
+            //deviceType 0  风机盘管的消息
+            if (str.contains("deviceType\":0,")) {
+                //json字符串返回值反序列化为实体类
+                Fancoil fancoil = JSONObject.parseObject(str, Fancoil.class);
+                String tablename = "fancoil" + fancoil.getDeviceId();
+                if (fancoilsSet.contains(tablename)) {
+                    if (fancoil.getTimestamp() < 1600000000) {
+                        sql = "insert into " + tablename + " (ts, roomstate, settingtemperature, settinghumidity,"
+                                + "currenttemperature, currenthumidity, settingfanspeed, currentfanspeed,"
+                                + " coilvalve,) values(now, " + fancoil.getRoomState()
+                                + "," + fancoil.getSettingTemperature()
+                                + "," + fancoil.getSettingHumidity()
+                                + "," + fancoil.getCurrentlyTemperature()
+                                + "," + fancoil.getCurrentlyHumidity()
+                                + "," + fancoil.getSettingFanSpeed()
+                                + "," + fancoil.getCurrentFanSpeed()
+                                + "," + fancoil.isCoilvalve()
+                                + ");";
+                    } else {
+                        sql = "insert into " + tablename + " (ts, roomstate, settingtemperature, settinghumidity,"
+                                + " currenttemperature, currenthumidity, settingfanspeed, currentfanspeed,"
+                                + " coilvalve,) values(" + fancoil.getTimestamp()
+                                //这里要加 000 TDengine的时间戳毫秒级的。
+                                + "000," + fancoil.getRoomState()
+                                + "," + fancoil.getSettingTemperature()
+                                + "," + fancoil.getSettingHumidity()
+                                + "," + fancoil.getCurrentlyTemperature()
+                                + "," + fancoil.getCurrentlyHumidity()
+                                + "," + fancoil.getSettingFanSpeed()
+                                + "," + fancoil.getCurrentFanSpeed()
+                                + "," + fancoil.isCoilvalve()
+                                + ");";
+                    }
+                } else {
+                    fancoil.setLocation(topic);
+                    sql = "create table " + tablename + " using homedevice.fancoils tags(\""
+                            + fancoil.getLocation() + "\","
+                            + fancoil.getRoomId() + ","
+                            + fancoil.getDeviceType() + ","
+                            + fancoil.getDeviceId() + ")";
+                    fancoilsSet.add(tablename);
+                }
+            }
+
 
         }
 
@@ -136,6 +217,7 @@ public class MqttReceriveCallback implements MqttCallback {
             stmt.executeUpdate(sql);
 //            int affectedRows = stmt.executeUpdate(sql);
 //            System.out.println("insert " + affectedRows + " rows");
+            System.out.println("access databases");
         }
 
         stmt.close();
