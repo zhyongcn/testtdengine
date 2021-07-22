@@ -213,8 +213,12 @@ public class MqttReceriveCallback implements MqttCallback {
         Statement stmt = conn.createStatement();
 
         if (!(sql == null)) {
-            //执行SQL命令
-            stmt.executeUpdate(sql);
+            try {//数据不一定合规矩，try保护一下，偷懒 :)  it work!
+                //执行SQL命令
+                stmt.executeUpdate(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
 //            int affectedRows = stmt.executeUpdate(sql);
 //            System.out.println("insert " + affectedRows + " rows");
             System.out.println("access databases");
