@@ -6,3 +6,7 @@
 /dataSources.local.xml
 # 基于编辑器的 HTTP 客户端请求
 /httpRequests/
+
+# 自定义的文件和文件夹
+/target/
+
