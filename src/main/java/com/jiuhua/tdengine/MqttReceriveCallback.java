@@ -187,7 +187,7 @@ public class MqttReceriveCallback implements MqttCallback {
                     if (fancoil.getTimestamp() < 1600000000) {
                         sql = "insert into " + tablename + " (ts, roomstate, settingtemperature, settinghumidity,"
                                 + "currenttemperature, currenthumidity, settingfanspeed, currentfanspeed,"
-                                + " coilvalve,) values(now, " + fancoil.getRoomState()
+                                + " coilvalve) values(now, " + fancoil.getRoomState()
                                 + "," + fancoil.getSettingTemperature()
                                 + "," + fancoil.getSettingHumidity()
                                 + "," + fancoil.getCurrentlyTemperature()
@@ -199,7 +199,7 @@ public class MqttReceriveCallback implements MqttCallback {
                     } else {
                         sql = "insert into " + tablename + " (ts, roomstate, settingtemperature, settinghumidity,"
                                 + " currenttemperature, currenthumidity, settingfanspeed, currentfanspeed,"
-                                + " coilvalve,) values(" + fancoil.getTimestamp()
+                                + " coilvalve) values(" + fancoil.getTimestamp()
                                 //这里要加 000 TDengine的时间戳毫秒级的。
                                 + "000," + fancoil.getRoomState()
                                 + "," + fancoil.getSettingTemperature()
@@ -222,8 +222,87 @@ public class MqttReceriveCallback implements MqttCallback {
                 }
             }
 
-            //TODO: Heatpump
-            //TODO: Watershed
+            //Heatpump  devicetype 4 热泵主机的消息
+            if (str.contains("deviceType\":4,")) {
+                //json字符串返回值反序列化为实体类
+                Heatpump heatpump = JSONObject.parseObject(str, Heatpump.class);
+                String tablename = "heatpump" + heatpump.getDeviceId();
+                if (heatpumpsSet.contains(tablename)) {
+                    if (heatpump.getTimestamp() < 1600000000) {
+                        sql = "insert into " + tablename + " (ts, currenttemperature, settingtemperature, currenthumidity,"
+                                + " settinghumidity, heatpumpstate, roomstate) values(now, "
+                                + heatpump.getCurrentlyTemperature()
+                                + "," + heatpump.getSettingTemperature()
+                                + "," + heatpump.getCurrentlyHumidity()
+                                + "," + heatpump.getSettingHumidity()
+                                + "," + heatpump.isHeatpumpstate()
+                                + "," + heatpump.getRoomState()
+                                + ");";
+                    } else {
+                        sql = "insert into " + tablename + " (ts, currenttemperature, settingtemperature, currenthumidity,"
+                                + " settinghumidity, heatpumpstate, roomstate) values(" + heatpump.getTimestamp()
+                                //这里要加 000 TDengine的时间戳毫秒级的。
+                                + "000," + heatpump.getCurrentlyTemperature()
+                                + "," + heatpump.getSettingTemperature()
+                                + "," + heatpump.getCurrentlyHumidity()
+                                + "," + heatpump.getSettingHumidity()
+                                + "," + heatpump.isHeatpumpstate()
+                                + "," + heatpump.getRoomState()
+                                + ");";
+                    }
+                } else {
+                    heatpump.setLocation(topic);
+                    sql = "create table " + tablename + " using homedevice.heatpumps tags(\""
+                            + heatpump.getLocation() + "\", "
+                            + heatpump.getRoomId() + ","
+                            + heatpump.getDeviceType() + ","
+                            + heatpump.getDeviceId() + ")";
+                    heatpumpsSet.add(tablename);
+                }
+            }
+
+            //Watershed  deviceType 1  模块现在是floorheat，指地暖的分水器，应该空调的分水器也适用。
+            if (str.contains("deviceType\":1,")) {
+                //json字符串返回值反序列化为实体类
+                Watershed watershed = JSONObject.parseObject(str, Watershed.class);
+                String tablename = "watershed" + watershed.getDeviceId();
+                if (watershedsSet.contains(tablename)) {
+                    if (watershed.getTimestamp() < 1600000000) {
+                        sql = "insert into " + tablename + " (ts, roomid, roomstate, floorvalve, coilvalve,"
+                                + "currenttemperature, currenthumidity,  settingtemperature, settinghumidity) values(now, "
+                                + watershed.getRoomId()
+                                + "," + watershed.getRoomState()
+                                + "," + watershed.isFloorvalve()
+                                + "," + watershed.isCoilvalve()
+                                + "," + watershed.getCurrentlyTemperature()
+                                + "," + watershed.getCurrentlyHumidity()
+                                + "," + watershed.getSettingTemperature()
+                                + "," + watershed.getSettingHumidity()
+                                + ");";
+                    } else {
+                        sql = "insert into " + tablename + " (ts, roomid, roomstate, floorvalve, coilvalve,"
+                                + "currenttemperature, currenthumidity,  settingtemperature, settinghumidity) values("
+                                + watershed.getTimestamp()
+                                //这里要加 000 TDengine的时间戳毫秒级的。
+                                + "000," + watershed.getRoomId()
+                                + "," + watershed.getRoomState()
+                                + "," + watershed.isFloorvalve()
+                                + "," + watershed.isCoilvalve()
+                                + "," + watershed.getCurrentlyTemperature()
+                                + "," + watershed.getCurrentlyHumidity()
+                                + "," + watershed.getSettingTemperature()
+                                + "," + watershed.getSettingHumidity()
+                                + ");";
+                    }
+                } else {
+                    watershed.setLocation(topic);
+                    sql = "create table " + tablename + " using homedevice.watersheds tags(\""
+                            + watershed.getLocation() + "\","
+                            + watershed.getDeviceType() + ","
+                            + watershed.getDeviceId() + ")";
+                    watershedsSet.add(tablename);
+                }
+            }
 
 
         }
