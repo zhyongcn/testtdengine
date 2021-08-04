@@ -10,11 +10,11 @@ public class Boiler {
     private String location;
     private int roomId;
     private int deviceType;
-    private int deviceId;
+    private String deviceId;
 
     public Boiler(long timestamp, int roomState, boolean boilerstate,
                   int currentlyTemperature, int settingTemperature,
-                  String location, int roomId, int deviceType, int deviceId) {
+                  String location, int roomId, int deviceType, String deviceId) {
         this.timestamp = timestamp;
         this.roomState = roomState;
         this.boilerstate = boilerstate;
@@ -90,11 +90,11 @@ public class Boiler {
         this.deviceType = deviceType;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 }

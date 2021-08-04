@@ -1,4 +1,8 @@
 com\jiuhua\tdengine\MqttReceriveCallback.class
+com\jiuhua\tdengine\Heatpump.class
 com\jiuhua\tdengine\Sensor.class
+com\jiuhua\tdengine\Watershed.class
 com\jiuhua\tdengine\MyMqttClient$1.class
+com\jiuhua\tdengine\Fancoil.class
 com\jiuhua\tdengine\MyMqttClient.class
+com\jiuhua\tdengine\Boiler.class

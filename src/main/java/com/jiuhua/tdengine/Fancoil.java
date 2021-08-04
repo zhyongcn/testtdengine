@@ -14,12 +14,12 @@ public class Fancoil {
     private String location;
     private int roomId;
     private int deviceType;
-    private int deviceId;
+    private String deviceId;
 
     public Fancoil(long timestamp, int roomState, int currentlyTemperature,
                    int currentlyHumidity, int settingTemperature, int settingHumidity,
                    int settingFanSpeed, int currentFanSpeed, boolean coilvalve,
-                   String location, int roomId, int deviceType, int deviceId) {
+                   String location, int roomId, int deviceType, String deviceId) {
         this.timestamp = timestamp;
         this.roomState = roomState;
         this.currentlyTemperature = currentlyTemperature;
@@ -131,11 +131,11 @@ public class Fancoil {
         this.deviceType = deviceType;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 }

@@ -10,11 +10,11 @@ public class Sensor {
     private String location;
     private int roomId;
     private int deviceType;
-    private int deviceId;
+    private String deviceId;
 
     public Sensor(long timestamp, int currentlyTemperature, int currentlyHumidity,
                   int adjustingTemperature, int adjustingHumidity, String location,
-                  int roomId, int deviceType, int deviceId) {
+                  int roomId, int deviceType, String deviceId) {
         this.timestamp = timestamp;
         this.currentlyTemperature = currentlyTemperature;
         this.currentlyHumidity = currentlyHumidity;
@@ -105,11 +105,11 @@ public class Sensor {
         this.deviceType = deviceType;
     }
 
-    public int getDeviceId() {
+    public String getDeviceId() {
         return deviceId;
     }
 
-    public void setDeviceId(int deviceId) {
+    public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 }

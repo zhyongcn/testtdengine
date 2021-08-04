@@ -15,11 +15,15 @@ public class MqttReceriveCallback implements MqttCallback {
     private final HashSet<String> sensorsSet;
     private final HashSet<String> boilersSet;
     private final HashSet<String> fancoilsSet;
+    private final HashSet<String> heatpumpsSet;
+    private final HashSet<String> watershedsSet;
 
     public MqttReceriveCallback() {
         sensorsSet = new HashSet<>();
         boilersSet = new HashSet<>();
         fancoilsSet = new HashSet<>();
+        heatpumpsSet = new HashSet<>();
+        watershedsSet = new HashSet<>();
 
         try {
             Class.forName("com.taosdata.jdbc.rs.RestfulDriver");
@@ -52,6 +56,22 @@ public class MqttReceriveCallback implements MqttCallback {
                 String tablename = resultSet.getString(1);
                 System.out.println("表名是： " + tablename + "");
                 fancoilsSet.add(tablename);
+            }
+
+            sql = "select tbname from homedevice.heatpumps";
+            resultSet = stmt.executeQuery(sql);
+            while (resultSet.next()) {
+                String tablename = resultSet.getString(1);
+                System.out.println("表名是： " + tablename + "");
+                heatpumpsSet.add(tablename);
+            }
+
+            sql = "select tbname from homedevice.watersheds";
+            resultSet = stmt.executeQuery(sql);
+            while (resultSet.next()) {
+                String tablename = resultSet.getString(1);
+                System.out.println("表名是： " + tablename + "");
+                watershedsSet.add(tablename);
             }
 
             stmt.close();
@@ -201,6 +221,9 @@ public class MqttReceriveCallback implements MqttCallback {
                     fancoilsSet.add(tablename);
                 }
             }
+
+            //TODO: Heatpump
+            //TODO: Watershed
 
 
         }
