@@ -214,7 +214,7 @@ public class MqttReceriveCallback implements MqttCallback {
                 } else {
                     fancoil.setLocation(topic);
                     sql = "create table " + tablename + " using homedevice.fancoils tags(\""
-                            + fancoil.getLocation() + "\","
+                            + fancoil.getLocation() + "\", "
                             + fancoil.getRoomId() + ","
                             + fancoil.getDeviceType() + ","
                             + fancoil.getDeviceId() + ")";
@@ -261,7 +261,7 @@ public class MqttReceriveCallback implements MqttCallback {
                 }
             }
 
-            //Watershed  deviceType 1  模块现在是floorheat，指地暖的分水器，应该空调的分水器也适用。
+            //Watershed  deviceType 1  指地暖的分水器，应该空调的分水器也适用。
             if (str.contains("deviceType\":1,")) {
                 //json字符串返回值反序列化为实体类
                 Watershed watershed = JSONObject.parseObject(str, Watershed.class);

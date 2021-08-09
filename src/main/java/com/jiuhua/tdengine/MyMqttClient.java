@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class MyMqttClient {
     public static final String HOST = "tcp://175.24.33.56:1883";
 //        public static final String SUB_TOPIC = "86518/#";
-    public static final String SUB_TOPIC1 = "86518/yuxiuhuayuan/12-1-101/Room1";
+    public static final String SUB_TOPIC1 = "86518/yuxiuhuayuan/12-1-101/room1";
     public static final String SUB_TOPIC2 = "86518/yuxiuhuayuan/12-1-101/Room2";
     public static final String SUB_TOPIC3 = "86518/yuxiuhuayuan/12-1-101/room3";//TODO 注意 R 的大小写
     public static final String SUB_TOPIC4 = "86518/yuxiuhuayuan/12-1-101/Room4";
@@ -103,6 +103,7 @@ public class MyMqttClient {
     public void disconnect() {
         try {
             client.disconnect();
+            startReconnect();
         } catch (MqttException e) {
             e.printStackTrace();
         }
