@@ -10,25 +10,25 @@ import java.util.concurrent.TimeUnit;
 
 public class MyMqttClient {
     public static final String HOST = "tcp://175.24.33.56:1883";
-//        public static final String SUB_TOPIC = "86518/#";
-    public static final String SUB_TOPIC1 = "86518/yuxiuhuayuan/12-1-101/room1";
-    public static final String SUB_TOPIC2 = "86518/yuxiuhuayuan/12-1-101/Room2";
-    public static final String SUB_TOPIC3 = "86518/yuxiuhuayuan/12-1-101/room3";//TODO 注意 R 的大小写
-    public static final String SUB_TOPIC4 = "86518/yuxiuhuayuan/12-1-101/Room4";
-    public static final String SUB_TOPIC5 = "86518/yuxiuhuayuan/12-1-101/Room5";
-    public static final String SUB_TOPIC6 = "86518/yuxiuhuayuan/12-1-101/Room6";
-    public static final String SUB_TOPIC7 = "86518/yuxiuhuayuan/12-1-101/Room7";
-    public static final String SUB_TOPIC8 = "86518/yuxiuhuayuan/12-1-101/Room8";
-    public static final String SUB_TOPIC9 = "86518/yuxiuhuayuan/12-1-101/Room9";
-    public static final String SUB_TOPIC10 = "86518/yuxiuhuayuan/12-1-101/Room10";
-    public static final String SUB_TOPIC11 = "86518/yuxiuhuayuan/12-1-101/Room11";
-    public static final String SUB_TOPIC_YLHY = "86518/yulonghuayuan/c-82/room1";
-    public static final String SUB_TOPIC_QXGY = "86518/qianxigongyu/2-4-102/room1";
-    public static final String SUB_TOPIC_HYJD = "86518/HYJD/7-3-402/Room1";
-    public static final String SUB_TOPIC_JHDCYH1 = "86518/JHDCYH/2-4-101/Room1";
-    public static final String SUB_TOPIC_JHDCYH2 = "86518/JHDCYH/2-4-101/Room2";
-    public static final String SUB_TOPIC_JHDCYH3 = "86518/JHDCYH/2-4-101/Room3";
-    public static final String SUB_TOPIC_JHDCYH4 = "86518/JHDCYH/2-4-101/Room4";
+    public static final String SUB_TOPIC = "86518/#";
+//    public static final String SUB_TOPIC1 = "86518/yuxiuhuayuan/12-1-101/room1";
+//    public static final String SUB_TOPIC2 = "86518/yuxiuhuayuan/12-1-101/Room2";
+//    public static final String SUB_TOPIC3 = "86518/yuxiuhuayuan/12-1-101/room3";//TODO 注意 R 的大小写
+//    public static final String SUB_TOPIC4 = "86518/yuxiuhuayuan/12-1-101/Room4";
+//    public static final String SUB_TOPIC5 = "86518/yuxiuhuayuan/12-1-101/Room5";
+//    public static final String SUB_TOPIC6 = "86518/yuxiuhuayuan/12-1-101/Room6";
+//    public static final String SUB_TOPIC7 = "86518/yuxiuhuayuan/12-1-101/Room7";
+//    public static final String SUB_TOPIC8 = "86518/yuxiuhuayuan/12-1-101/Room8";
+//    public static final String SUB_TOPIC9 = "86518/yuxiuhuayuan/12-1-101/Room9";
+//    public static final String SUB_TOPIC10 = "86518/yuxiuhuayuan/12-1-101/Room10";
+//    public static final String SUB_TOPIC11 = "86518/yuxiuhuayuan/12-1-101/Room11";
+//    public static final String SUB_TOPIC_YLHY = "86518/yulonghuayuan/c-82/room1";
+//    public static final String SUB_TOPIC_QXGY = "86518/qianxigongyu/2-4-102/room1";
+//    public static final String SUB_TOPIC_HYJD = "86518/HYJD/7-3-402/Room1";
+//    public static final String SUB_TOPIC_JHDCYH1 = "86518/JHDCYH/2-4-101/Room1";
+//    public static final String SUB_TOPIC_JHDCYH2 = "86518/JHDCYH/2-4-101/Room2";
+//    public static final String SUB_TOPIC_JHDCYH3 = "86518/JHDCYH/2-4-101/Room3";
+//    public static final String SUB_TOPIC_JHDCYH4 = "86518/JHDCYH/2-4-101/Room4";
 
     public static final String LASTWILL_TOPIC = "86518/lastwill";
     private static final String clientid = "client5ID";
@@ -89,11 +89,13 @@ public class MyMqttClient {
 
             client.connect(options);
             //订阅消息
-            int[] Qos = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            //int[] Qos = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+            int[] Qos = {1};
             //设置订阅的topic，TODO：将来按照城市来布置服务器
-            String[] subTopics = {SUB_TOPIC1, SUB_TOPIC2, SUB_TOPIC3, SUB_TOPIC4, SUB_TOPIC5, SUB_TOPIC6, SUB_TOPIC7,
-                    SUB_TOPIC8, SUB_TOPIC9, SUB_TOPIC10, SUB_TOPIC11, SUB_TOPIC_YLHY, SUB_TOPIC_QXGY, SUB_TOPIC_HYJD,
-                    SUB_TOPIC_JHDCYH1, SUB_TOPIC_JHDCYH2, SUB_TOPIC_JHDCYH3, SUB_TOPIC_JHDCYH4};
+            //String[] subTopics = {SUB_TOPIC1, SUB_TOPIC2, SUB_TOPIC3, SUB_TOPIC4, SUB_TOPIC5, SUB_TOPIC6, SUB_TOPIC7,
+            //        SUB_TOPIC8, SUB_TOPIC9, SUB_TOPIC10, SUB_TOPIC11, SUB_TOPIC_YLHY, SUB_TOPIC_QXGY, SUB_TOPIC_HYJD,
+            //        SUB_TOPIC_JHDCYH1, SUB_TOPIC_JHDCYH2, SUB_TOPIC_JHDCYH3, SUB_TOPIC_JHDCYH4};
+            String[] subTopics = {SUB_TOPIC};
             client.subscribe(subTopics, Qos);
         } catch (Exception e) {
             e.printStackTrace();
