@@ -31,7 +31,7 @@ public class MyMqttClient {
 //    public static final String SUB_TOPIC_JHDCYH4 = "86518/JHDCYH/2-4-101/Room4";
 
     public static final String LASTWILL_TOPIC = "86518/lastwill";
-    private static final String clientid = "client5ID";
+    private static final String clientid = "client7ID";
     private MqttClient client;
     private MqttConnectOptions options;
     private String userName = "userName";
